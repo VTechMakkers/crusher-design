@@ -3,13 +3,28 @@ name = "crusher-design"
 version = "0.1.0"
 description = "Design intelligence loop for jaw crusher parts"
 requires-python = ">=3.11"
+
+# Core dependencies — needed for the design loop, sensitivity, Pareto,
+# wear simulation, and assembly aggregation to run. Pure Python plus
+# numpy; installs in seconds.
 dependencies = [
-    "cadquery-ocp>=7.7",
     "pyyaml>=6.0",
-    "mcp>=1.0",
     "numpy>=1.26",
     "pymoo>=0.6",
     "SALib>=1.5",
+]
+
+# Optional groups — heavy or environment-specific. Tests for these
+# layers skip cleanly when the dep isn't installed (verified in CI).
+[project.optional-dependencies]
+cad = ["cadquery-ocp>=7.7"]
+mcp = ["mcp>=1.0"]
+ml = ["torch>=2.0"]
+fea = ["calculix-frd-py>=0.1", "gmsh>=4.11"]
+test = ["pytest>=8.0"]
+dev = [
+    "pytest>=8.0", "ruff>=0.5",
+    "cadquery-ocp>=7.7", "mcp>=1.0",
 ]
 
 [tool.uv]

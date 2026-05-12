@@ -51,3 +51,10 @@ out/
 *.pth
 *.onnx
 *.h5
+
+# design_loop.evaluate appends to <model>.history.jsonl on every call,
+# including from the test suite. These are test side-effects, not
+# engineering history — in production they should be archived externally
+# (e.g. an append-only log shipped to a data lake) rather than committed
+# to source control.
+*.history.jsonl

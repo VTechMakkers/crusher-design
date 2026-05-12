@@ -1,0 +1,41 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies (core + test)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+
+      - name: Show installed package versions
+        run: pip list
+
+      - name: Run test suite
+        run: python -m pytest tests/ -v --tb=short
+
+      - name: Show skip reasons
+        if: always()
+        run: |
+          echo "Optional-dep tests skip cleanly when binaries / libs absent."
+          echo "Expected skips on minimal CI: pychrono, gmsh+ccx, torch."
