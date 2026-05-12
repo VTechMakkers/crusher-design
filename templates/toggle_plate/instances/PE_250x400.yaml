@@ -1,0 +1,20 @@
+model: PE_250x400
+part: toggle_plate
+material: AR400
+params:
+  length_mm: 420
+  width_mm: 140
+  thickness_mm: 22
+  seat_radius_mm: 25
+  web_height_mm: 45
+  web_thickness_mm: 10
+  relief_groove_depth_mm: 5
+  relief_groove_width_mm: 6
+validation:
+  fea_validated: false      # set true when first FEA pass passes
+  field_validated: false    # set true when N units survive Y months
+  units_shipped: 0
+  field_failures: 0
+notes: |
+  PLACEHOLDER values — replace with TechMakkers' production-validated geometry.
+  This file is the canonical "validated configuration" for this part on this model.

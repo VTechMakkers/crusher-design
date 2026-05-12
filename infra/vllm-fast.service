@@ -1,0 +1,23 @@
+[Unit]
+Description=vLLM serving Qwen3-7B-Instruct (INT8) on RTX 3080
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/opt/crusher-design
+Environment="CUDA_VISIBLE_DEVICES=1"
+Environment="HF_HOME=/var/cache/huggingface"
+ExecStart=/usr/bin/env vllm serve Qwen/Qwen3-7B-Instruct \
+    --host 127.0.0.1 \
+    --port 8002 \
+    --max-model-len 16384 \
+    --gpu-memory-utilization 0.90 \
+    --enforce-eager \
+    --served-model-name qwen3-7b-instruct
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

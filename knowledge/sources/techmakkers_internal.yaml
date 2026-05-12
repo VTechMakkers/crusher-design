@@ -1,0 +1,54 @@
+# TechMakkers internal measurements — TIER 1 (highest trust).
+# Append-only structured log. Each entry: material, property, value, source ID,
+# date, sample reference (heat / batch / unit_id).
+#
+# This file overrides everything else for materials TechMakkers actually uses.
+
+mill_certs:
+  # Example schema. Replace with real cert data from each batch you purchase.
+  # - material: Mn13
+  #   heat_number: MN13-2026-0142
+  #   supplier: <supplier>
+  #   date_received: 2026-04-12
+  #   properties:
+  #     yield_strength_MPa: 395
+  #     ultimate_strength_MPa: 870
+  #     hardness_HBW_as_cast: 210
+  #     elongation_pct: 38
+  #     composition:
+  #       C_pct: 1.18
+  #       Mn_pct: 12.4
+  #       Si_pct: 0.55
+  #       P_pct: 0.05
+  #       S_pct: 0.018
+  #   notes: ""
+  []
+
+fab_measurements:
+  # Dimensions, mass, hardness measured at fab on actual parts.
+  # - part_id: TP-2026-0042
+  #   part_class: toggle_plate
+  #   model: PE_400x600
+  #   date: 2026-04-15
+  #   properties:
+  #     mass_kg: 41.8
+  #     length_mm: 539.5
+  #     thickness_mm: 27.8
+  #   notes: "within tolerance"
+  []
+
+field_observations:
+  # Wear-rate, failure-mode, runtime data captured from deployed units.
+  # - unit_id: SN-2025-0184
+  #   model: PE_400x600
+  #   site: <customer>
+  #   commissioned: 2025-08-10
+  #   observations:
+  #     - date: 2026-03-22
+  #       part_class: swing_jaw_plate
+  #       hours_in_service: 4200
+  #       wear_depth_mm: 12
+  #       feed_material: basalt
+  #       feed_size_mm: 280
+  #       notes: "even wear pattern, replacement scheduled"
+  []

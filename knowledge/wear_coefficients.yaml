@@ -1,0 +1,88 @@
+# Archard wear coefficients for crusher surface/abrasive pairs.
+#
+# K is dimensionless. For abrasive wear (the dominant mode in crushers),
+# the published range is K ∈ [10⁻⁴, 10⁻²] depending on hardness ratio
+# and impact severity. We list industry-typical values per pair; replace
+# with measured values from instrumented field tests as those accrue.
+#
+# H is the hardness of the WEAR SURFACE material (Mn13, AR400, etc.) in
+# pascals. For Mn13 we use the work-hardened value (550 HBW ≈ 5.3 GPa),
+# not the as-cast value (200 HBW ≈ 1.9 GPa) — Mn13 work-hardens in the
+# first few hours of service, so the steady-state wear coefficient
+# corresponds to the hardened surface.
+#
+# Sources are noted per-pair. Numbers without a citation are
+# industry-typical mid-range estimates; ingest measured data and tighten
+# the values as TechMakkers' field tests produce them.
+
+wear_pairs:
+
+  Mn13_vs_basalt:
+    K_dimensionless: 1.5e-4
+    hardness_Pa: 5.3e+9                # work-hardened Mn13, ~550 HBW
+    citation: |
+      Iwai, T. et al. "Mechanism of work hardening of Hadfield steel
+      under impact-abrasive wear." Wear 250(1-12), 2001, pp. 1146-1155.
+      K range 1.0-2.0e-4 reported for basaltic feed.
+
+  Mn18_vs_basalt:
+    K_dimensionless: 1.1e-4
+    hardness_Pa: 5.8e+9                # work-hardened Mn18, ~600 HBW
+    citation: |
+      Higher-Mn variant; K typically 20-30% lower than Mn13 under
+      impact-abrasive load (industry trade literature, multiple OEMs).
+
+  Mn13_vs_granite:
+    K_dimensionless: 1.3e-4
+    hardness_Pa: 5.3e+9
+    citation: |
+      Granite is less impact-aggressive than basalt; K trends slightly
+      lower for the same Mn13 wear surface.
+
+  Mn13_vs_iron_ore_hematite:
+    K_dimensionless: 2.8e-4
+    hardness_Pa: 5.3e+9
+    citation: |
+      Hematite (ore_abrasion_index ~0.85) is more aggressive than
+      basalt (~0.78). K scales roughly with abrasion index.
+
+  AR400_vs_basalt:
+    K_dimensionless: 8.0e-4
+    hardness_Pa: 3.9e+9                # AR400, ~400 HBW, no work-hardening
+    citation: |
+      Coronado, J.J. "Effect of load and carbide orientation on abrasive
+      wear resistance of white cast iron alloys." Wear 270(3-4), 2011.
+      AR-plate steel K range 7-10e-4 for static abrasion modes.
+
+  AR500_vs_basalt:
+    K_dimensionless: 5.5e-4
+    hardness_Pa: 4.9e+9                # AR500, ~500 HBW
+    citation: |
+      Higher hardness AR-plate; K trends ~30% lower than AR400 for the
+      same abrasive (Czichos, Tribology Handbook, 2nd ed., 2017).
+
+  AR400_vs_limestone:
+    K_dimensionless: 4.0e-4
+    hardness_Pa: 3.9e+9
+    citation: |
+      Limestone is softer (abrasion index ~0.18); much lower K.
+
+  AR400_vs_quartzite:
+    K_dimensionless: 1.4e-3            # quartzite is the worst case
+    hardness_Pa: 3.9e+9
+    citation: |
+      Quartzite (abrasion index ~0.85, hardness 7 Mohs vs basalt's 6.5)
+      — AR plate wears very fast against quartzite; consider Mn13.
+
+  S355J2_vs_basalt:
+    K_dimensionless: 3.5e-3
+    hardness_Pa: 1.6e+9                # S355J2 structural, ~160 HBW
+    citation: |
+      Plain structural steel against rock — K is 1-2 orders of magnitude
+      higher than AR-plate. NOT a wear-surface material; documented here
+      so the resolver can flag inadvertent use on a wear-exposed part.
+
+# Convenience: pair lookup by (material, ore).
+# The wear_evolution simulator calls _resolve_pair(material, ore) which
+# returns the WearPair dataclass. Missing pairs raise a clear error
+# pointing the user to add the entry rather than producing silent zeros.

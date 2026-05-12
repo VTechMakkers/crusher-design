@@ -1,0 +1,59 @@
+cases:
+  - name: nominal_crushing
+    description: design throughput, mid-CSS, mid-feed
+    crushing_force_kN: 850
+    direction: normal_to_face
+    impact_frequency_hz: 4.5
+    duty_factor: 0.85
+    notes: primary FEA load case
+
+  - name: peak_impact
+    description: large feed boulder, single impact
+    crushing_force_kN: 2400
+    direction: normal_to_face_localized
+    impact_frequency_hz: null
+    duty_factor: null
+    notes: peak load capacity check; should not exceed material yield
+
+  - name: tramp_iron
+    description: uncrushable metal in feed
+    crushing_force_kN: 3500
+    direction: normal_to_face_point_load
+    expected_outcome: load_relieved_through_toggle_plate_shear
+
+  - name: misaligned_jaw
+    description: worn mounting, asymmetric load
+    crushing_force_kN: 950
+    direction: normal_eccentric
+    eccentricity_mm: 25
+
+constraints:
+  fixed: backing_plate_mounting_holes
+  contact: faces_against_fixed_jaw_via_feed
+  symmetry: none
+
+dem_scenarios:
+  - id: capacity_basalt_80mm
+    ore: basalt
+    feed_p80_mm: 250
+    css_mm: 80
+    target_tph: 65
+    sim_duration_s: 5.0
+    n_particles: 80000
+
+  - id: capacity_granite_60mm
+    ore: granite
+    feed_p80_mm: 200
+    css_mm: 60
+    target_tph: 55
+    sim_duration_s: 5.0
+    n_particles: 80000
+
+  - id: wear_map_limestone
+    ore: limestone
+    feed_p80_mm: 300
+    css_mm: 100
+    target_tph: 80
+    sim_duration_s: 10.0
+    n_particles: 120000
+    notes: longer sim to develop steady wear-contact field

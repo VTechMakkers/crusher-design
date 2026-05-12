@@ -1,0 +1,18 @@
+model: PE_900x1200
+part: toggle_plate
+material: AR400
+params:
+  length_mm: 980
+  width_mm: 320
+  thickness_mm: 52
+  seat_radius_mm: 60
+  web_height_mm: 110
+  web_thickness_mm: 22
+  relief_groove_depth_mm: 13
+  relief_groove_width_mm: 14
+validation:
+  fea_validated: false
+  field_validated: false
+  units_shipped: 0
+  field_failures: 0
+notes: PLACEHOLDER — replace with production-validated geometry.

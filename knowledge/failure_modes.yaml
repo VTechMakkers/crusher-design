@@ -1,0 +1,361 @@
+# Crusher failure-mode library.
+#
+# Each entry triples (failure_mode, diagnostic_rule, prevention_rule)
+# with a citation for the underlying engineering principle. Severity
+# values:
+#   critical   → endangers personnel OR causes secondary damage to
+#                non-replaceable parts (eccentric shaft, main frame)
+#   major      → crusher stops operating but no cascading damage
+#   minor      → component wears or fails as expected end-of-life
+#
+# Rule kinds the FMEA engine (loop/fmea.py, next phase) evaluates:
+#   ratio_threshold     : metric_a / metric_b vs threshold
+#   stress_vs_strength  : stress / allowable_stress vs safety_factor
+#   wear_lifetime       : Archard-predicted depth at service hours
+#   contact_pressure    : pressure vs material yield (Hertzian or flat)
+#   fatigue_life        : Goodman/Soderberg vs S-N curve at target cycles
+#
+# When the FMEA engine evaluates the design, it walks every applicable
+# entry and reports the worst-case margin per failure mode.
+
+failure_modes:
+
+  # ====================================================================
+  # TOGGLE PLATE
+  # ====================================================================
+
+  toggle_plate_compressive_buckling:
+    applies_to: [toggle_plate]
+    severity: critical
+    consequence: |
+      Pitman and frame seats receive shock load; can fracture frame at
+      rear toggle seat or bend pitman.
+    rule:
+      kind: ratio_threshold
+      numerator: peak_compressive_stress_MPa
+      denominator: critical_buckling_stress_MPa
+      threshold: 0.5
+      direction: above_is_failure
+    prevention_rule: |
+      For a short slender column under axial load: ensure
+      σ_compressive ≤ 0.5 · σ_Euler where σ_Euler = π² E (k/L)²
+      and k = √(I/A) is radius of gyration, L is unsupported length.
+    citation: |
+      Timoshenko & Gere, "Theory of Elastic Stability," 2nd ed., 1961.
+
+  toggle_plate_shear_at_relief:
+    applies_to: [toggle_plate]
+    severity: minor                   # intended failure mode at overload
+    consequence: |
+      Designed sacrificial failure. Toggle plate fractures along the
+      relief groove, allowing pitman + jaw to drop and disengaging the
+      crushing action. Inexpensive to replace.
+    rule:
+      kind: stress_vs_strength
+      stress_metric: shear_stress_at_relief_groove_MPa
+      strength_metric: shear_yield_MPa
+      safety_factor: 1.0              # equality at overload = correct behaviour
+      direction: above_is_failure
+    prevention_rule: |
+      Size the relief-groove cross-section so shear_yield is exceeded
+      at the tramp-iron design load (typically 1.5–2× peak normal load).
+    citation: |
+      Standard practice; documented in Lynch & Rowland, "Mineral
+      Crushing and Grinding Circuits" (2005).
+
+  toggle_plate_seat_wear:
+    applies_to: [toggle_plate]
+    severity: major
+    consequence: |
+      Loss of fit between toggle ends and seats → eccentric loading →
+      premature failure of toggle in non-design mode (off-axis buckling).
+    rule:
+      kind: wear_lifetime
+      region: toggle_end_curvature
+      max_depth_mm: 3.0
+      at_service_hours: 25000
+    prevention_rule: |
+      Specify AR-plate or local hardfacing on toggle ends; replace at
+      first sign of asymmetric seat fit (typically 15 000–20 000 hr).
+    citation: Archard, *J. Appl. Phys.* 24 (1953).
+
+  # ====================================================================
+  # JAW PLATES (swing + fixed)
+  # ====================================================================
+
+  jaw_plate_face_wear:
+    applies_to: [swing_jaw_plate, fixed_jaw_plate]
+    severity: minor                   # expected end-of-life
+    consequence: |
+      Tooth profile wears flat → reduced bite + breakage efficiency →
+      throughput drops below spec. Replace.
+    rule:
+      kind: wear_lifetime
+      region: tooth_crests
+      max_depth_mm: 0.6              # ~30% of original tooth height for typical pitch
+      at_service_hours: 4000
+    prevention_rule: |
+      Choose Mn13 for impact-abrasive feed (basalt, iron ore); accept
+      that wear is inevitable and design for quick changeover.
+    citation: Industry standard; OEM service literature.
+
+  jaw_plate_tooth_break:
+    applies_to: [swing_jaw_plate, fixed_jaw_plate]
+    severity: major
+    consequence: |
+      A tooth breaks off mid-service; loose chunk damages downstream
+      equipment (screens, conveyors) and disables the jaw locally.
+    rule:
+      kind: stress_vs_strength
+      stress_metric: peak_tooth_bending_stress_MPa
+      strength_metric: ultimate_strength_MPa
+      safety_factor: 2.0
+      direction: above_is_failure
+    prevention_rule: |
+      Limit tooth_depth such that base bending stress at peak impact
+      load stays below UTS / 2. Larger pitch + shorter teeth tolerates
+      more impact at the cost of throughput.
+    citation: Mechanical analysis; ASM Handbook Vol 1 (1990).
+
+  jaw_plate_tooth_root_fatigue:
+    applies_to: [swing_jaw_plate, fixed_jaw_plate]
+    severity: critical                # ejected fragment can injure operators
+    consequence: |
+      Cracks initiate at tooth-root fillets under cyclic impact, then
+      propagate. Fragment ejection.
+    rule:
+      kind: fatigue_life
+      stress_amplitude_MPa: peak_to_min_tooth_root_stress / 2
+      target_cycles: 1.0e9            # 25,000 hr × 4.5 Hz × 0.85 duty
+      material_S_N_curve_required: true
+    prevention_rule: |
+      Fillet radius at tooth root ≥ 0.15 × tooth_depth. Stress
+      concentration factor Kt ≤ 1.8 by design.
+    citation: |
+      Peterson's Stress Concentration Factors, 3rd ed. (Pilkey 2008).
+
+  jaw_plate_bolt_loosening:
+    applies_to: [swing_jaw_plate, fixed_jaw_plate, cheek_plate_left,
+                  cheek_plate_right]
+    severity: major
+    consequence: |
+      Plate shifts on its mount, eccentric loading damages backing,
+      bolts shear, plate falls into the chamber.
+    rule:
+      kind: ratio_threshold
+      numerator: bolt_preload_loss_pct
+      denominator: 100.0
+      threshold: 0.30
+      direction: above_is_failure
+    prevention_rule: |
+      Use locknuts + thread-locker + scheduled re-torque at 500 hr; or
+      design for through-bolt + wedge retention so bolts see no shear.
+    citation: VDI 2230 — systematic calculation of high duty bolted joints.
+
+  # ====================================================================
+  # PITMAN
+  # ====================================================================
+
+  pitman_big_end_fatigue:
+    applies_to: [pitman]
+    severity: critical
+    consequence: |
+      Crack propagates from big-end bore → catastrophic separation
+      → eccentric shaft + bearings + frame damaged.
+    rule:
+      kind: fatigue_life
+      stress_amplitude_MPa: alternating_bending_stress_big_end
+      target_cycles: 1.0e9
+      material_S_N_curve_required: true
+    prevention_rule: |
+      Big-end bore wall thickness ≥ 0.4 × bearing OD. Polish bore to
+      Ra ≤ 1.6 μm (cuts fatigue-sensitive surface defects).
+    citation: |
+      Shigley's Mechanical Engineering Design, 11th ed. (Budynas 2020),
+      Chapter 6 (Fatigue Failure).
+
+  pitman_bending_overload:
+    applies_to: [pitman]
+    severity: critical
+    consequence: |
+      Tramp iron event exceeds toggle plate's shear capacity AND pitman
+      yield strength simultaneously; pitman bends permanently.
+    rule:
+      kind: stress_vs_strength
+      stress_metric: peak_bending_stress_tramp_iron_MPa
+      strength_metric: yield_strength_MPa
+      safety_factor: 1.2
+      direction: above_is_failure
+    prevention_rule: |
+      Toggle plate must shear before pitman yields. Margin
+      σ_pitman_yield / σ_toggle_shear ≥ 1.5.
+    citation: First-principles strength of materials.
+
+  # ====================================================================
+  # ECCENTRIC SHAFT
+  # ====================================================================
+
+  eccentric_shaft_rotating_bending_fatigue:
+    applies_to: [eccentric_shaft]
+    severity: critical
+    consequence: |
+      Shaft fractures during operation. Pitman drops; jaw and frame
+      damage. Crusher likely totalled.
+    rule:
+      kind: fatigue_life
+      stress_amplitude_MPa: alternating_bending_at_eccentric
+      target_cycles: 1.0e10            # ~10 years × 280 rpm × 0.85 duty
+      material_S_N_curve_required: true
+    prevention_rule: |
+      Eccentric shaft fatigue strength at 10^10 cycles ≥ 1.5 × peak
+      alternating stress. Polished surface, Q&T heat treatment, no
+      sharp transitions at the eccentric throw fillet (R ≥ 0.05 × d).
+    citation: Shigley Ch. 7 (Shafts and Shaft Components).
+
+  eccentric_shaft_journal_wear:
+    applies_to: [eccentric_shaft]
+    severity: minor
+    consequence: |
+      Journal surface wears → bearing loses pre-load → increased
+      vibration → faster bearing fatigue.
+    rule:
+      kind: wear_lifetime
+      region: journal_surface
+      max_depth_mm: 0.05
+      at_service_hours: 30000
+    prevention_rule: |
+      Journal Ra ≤ 0.4 μm, hardened to ≥ 58 HRC, oil-bath lubricated.
+    citation: SKF General Catalogue (bearing-shaft fit recommendations).
+
+  # ====================================================================
+  # BEARINGS
+  # ====================================================================
+
+  bearing_L10_fatigue_spalling:
+    applies_to: [bearing_housing]
+    severity: major
+    consequence: |
+      Standard rolling-contact fatigue. First sign: increased
+      vibration. Lubrication oil debris analysis catches it early.
+      Replace.
+    rule:
+      kind: ratio_threshold
+      numerator: equivalent_dynamic_load_N
+      denominator: dynamic_load_rating_N
+      threshold: 0.20                  # C/P ≥ 5 = L10 ≥ ~25 000 hr at 280 rpm
+      direction: above_is_failure
+    prevention_rule: |
+      Size bearings so C/P ≥ 5 at design crushing force. Use ISO 281
+      formula with duty-cycle weighting.
+    citation: ISO 281:2007.
+
+  bearing_seizure_overload:
+    applies_to: [bearing_housing]
+    severity: critical
+    consequence: |
+      Static overload (e.g. tramp iron) plastically deforms raceways
+      OR loss of lubrication seizes the bearing. Eccentric stops; the
+      crusher does too.
+    rule:
+      kind: ratio_threshold
+      numerator: peak_static_load_N
+      denominator: static_load_rating_C0_N
+      threshold: 1.0
+      direction: above_is_failure
+    prevention_rule: |
+      P0 ≤ C0 at tramp-iron design load. Spherical roller bearings
+      tolerate ~2× P0/C0 transiently; deep-groove ball bearings do not.
+    citation: ISO 76:2006.
+
+  # ====================================================================
+  # MAIN FRAME
+  # ====================================================================
+
+  main_frame_weld_toe_fatigue:
+    applies_to: [main_frame]
+    severity: critical
+    consequence: |
+      Cracks initiate at weld toes under cyclic loading; propagate
+      through plate; frame fails in service.
+    rule:
+      kind: fatigue_life
+      stress_amplitude_MPa: alternating_weld_toe_stress
+      target_cycles: 1.0e9
+      material_S_N_curve_required: true
+      detail_category: "FAT 71"        # IIW classification for typical fillet weld
+    prevention_rule: |
+      Toe-grind critical welds; use FAT 100+ details. Avoid stress
+      concentrations near weld toes (no holes within 50 mm).
+    citation: |
+      IIW Recommendations for Fatigue Design of Welded Joints and
+      Components (Hobbacher 2008).
+
+  main_frame_casting_porosity:
+    applies_to: [main_frame, pitman, eccentric_shaft, bearing_housing,
+                  toggle_plate, flywheel]
+    severity: major
+    consequence: |
+      Internal porosity acts as crack initiator under cyclic stress.
+      Initially undetected; surface cracks emerge at hundreds-of-hours
+      service.
+    rule:
+      kind: ratio_threshold
+      numerator: max_pore_diameter_mm
+      denominator: section_thickness_mm
+      threshold: 0.03                  # 3% by relative size = trigger NDT
+      direction: above_is_failure
+    prevention_rule: |
+      Casting QC includes UT inspection on safety-critical sections;
+      reject castings with pores > 3% of section thickness. Mag-particle
+      inspection on stress-concentration regions (mount holes, fillets).
+    citation: |
+      ASTM E1444 (Magnetic Particle), ASTM E114 (UT contact inspection).
+
+  # ====================================================================
+  # OTHER WEAR PARTS
+  # ====================================================================
+
+  cheek_plate_wear:
+    applies_to: [cheek_plate_left, cheek_plate_right]
+    severity: minor
+    consequence: Eventually replaced as part of routine wear-parts service.
+    rule:
+      kind: wear_lifetime
+      region: side_face
+      max_depth_mm: 4.0
+      at_service_hours: 8000
+    prevention_rule: Mn13 with optional hardfacing strips on high-wear bands.
+    citation: Industry standard.
+
+  flywheel_hub_cracking:
+    applies_to: [flywheel]
+    severity: critical
+    consequence: |
+      Stored rotational kinetic energy of 35+ kg·m² at 280 rpm is
+      large; a separated flywheel fragment is a projectile hazard.
+    rule:
+      kind: stress_vs_strength
+      stress_metric: hoop_stress_at_hub_MPa
+      strength_metric: yield_strength_MPa
+      safety_factor: 4.0               # safety-critical → high factor
+      direction: above_is_failure
+    prevention_rule: |
+      Spheroidal-graphite cast iron hub; UT inspection mandatory.
+      Shroud the flywheel; the shroud must contain a fragment at
+      design speed × 1.25 (per ASME PVP industry guidance).
+    citation: |
+      ASME PVP-2014-28391 (rotating-equipment containment guidance).
+
+  drive_sheave_bolt_failure:
+    applies_to: [drive_sheave]
+    severity: major
+    consequence: |
+      Sheave separates from shaft; belt drives jam.
+    rule:
+      kind: ratio_threshold
+      numerator: bolt_alternating_stress_MPa
+      denominator: bolt_fatigue_endurance_MPa
+      threshold: 0.5
+      direction: above_is_failure
+    prevention_rule: VDI 2230 systematic bolted-joint design.
+    citation: VDI 2230.

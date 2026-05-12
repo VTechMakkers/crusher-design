@@ -1,0 +1,56 @@
+# Manufacturing constraints expressed as queryable rules.
+# Used by DFM checks in the design loop.
+
+casting:
+  sand_casting:
+    min_wall_thickness_mm: 8
+    draft_angle_deg: 1.0           # 1° to 3° depending on depth
+    parting_line: choose_to_minimize_undercut
+    riser_placement: heaviest_section_top
+    typical_tolerance_class: CT12   # ISO 8062
+    surface_finish_Ra_um: 12.5
+
+  investment_casting:
+    min_wall_thickness_mm: 2
+    draft_angle_deg: 0.5
+    typical_tolerance_class: CT6
+    surface_finish_Ra_um: 3.2
+    cost_per_kg_multiplier: 4.0    # vs sand casting baseline
+
+machining:
+  surface_grades:
+    - process: rough_milling
+      Ra_um: 6.3
+      tolerance_class: IT12
+    - process: finish_milling
+      Ra_um: 1.6
+      tolerance_class: IT9
+    - process: grinding
+      Ra_um: 0.4
+      tolerance_class: IT7
+
+  bore_aspect_ratio_max: 8.0       # length/diameter for through-bore drilling
+  thread_runout_min_mm: 3.0
+
+welding:
+  processes_in_house:
+    - SMAW
+    - MIG_solid
+    - MIG_FCAW
+  preheat_required_above_carbon_eq_pct: 0.45
+  distortion_control:
+    - sequence_symmetrically
+    - back_step_for_long_seams
+    - tack_at_400mm_max_spacing
+  joint_access_clearance_mm: 80    # tool reach for typical SMAW
+
+heat_treatment:
+  Mn13_solution_anneal_C: 1050     # quench in water
+  AR400_supplied_as_quenched_and_tempered: true
+  stress_relief_S355_C: 580
+
+inspection:
+  required_NDT_for_safety_critical:
+    - magnetic_particle    # weld toes
+    - ultrasonic           # plate thickness >25mm
+    - dye_penetrant        # final machined faces

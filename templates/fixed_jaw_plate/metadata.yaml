@@ -1,0 +1,25 @@
+part_class: fixed_jaw_plate
+version: 0.1.0
+status: scaffold
+material_default: Mn13
+applies_to_families: [single_toggle_jaw, fine_jaw]
+function: |
+  The stationary crushing surface. Mounted to the main frame. Pairs with
+  the swing jaw; both corrugated, both Mn13/Mn18. Tooth profile offset
+  from swing jaw by half a pitch so peak-meets-valley as jaws close.
+  Sees less impact than swing jaw (no eccentric acceleration) but similar
+  abrasion exposure.
+failure_modes:
+  - face_wear              # normal end-of-life
+  - localized_wear         # poor feed distribution
+  - tooth_break_off
+  - bolt_loosening
+  - cracking_at_tooth_root
+pairs_with: swing_jaw_plate
+high_leverage_design_variables:
+  - tooth_phase_offset_frac  # 0.5 = peak-meets-valley vs swing jaw
+  - tooth_pitch_mm           # must match swing jaw
+  - tooth_depth_mm
+dem_optimization_target: |
+  Paired with swing jaw in DEM simulation. Optimal phase offset typically 0.5
+  but rock-dependent — granite vs limestone vs iron ore have different optima.

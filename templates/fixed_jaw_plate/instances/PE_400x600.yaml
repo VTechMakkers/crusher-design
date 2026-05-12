@@ -1,0 +1,25 @@
+model: PE_400x600
+part: fixed_jaw_plate
+material: Mn13
+params:
+  height_mm: 700
+  width_mm: 400
+  thickness_mm: 70
+  backing_thickness_mm: 40
+  tooth_pitch_mm: 90
+  tooth_depth_mm: 22
+  tooth_angle_deg: 95
+  tooth_phase_offset_frac: 0.5
+  mount_holes: 4
+  mount_hole_dia_mm: 24
+  mount_hole_inset_mm: 40
+validation:
+  fea_validated: false
+  dem_validated: false
+  lab_tested: false
+  field_validated: false
+  units_shipped: 0
+  field_failures: 0
+notes: |
+  PLACEHOLDER. Tooth pitch + depth MUST match swing jaw PE_400x600 instance
+  (paired DEM simulation depends on it). Phase offset 0.5 = peak-meets-valley.

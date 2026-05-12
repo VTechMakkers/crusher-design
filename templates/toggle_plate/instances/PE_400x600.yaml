@@ -1,0 +1,18 @@
+model: PE_400x600
+part: toggle_plate
+material: AR400
+params:
+  length_mm: 540
+  width_mm: 180
+  thickness_mm: 28
+  seat_radius_mm: 35
+  web_height_mm: 60
+  web_thickness_mm: 12
+  relief_groove_depth_mm: 6
+  relief_groove_width_mm: 8
+validation:
+  fea_validated: false
+  field_validated: false
+  units_shipped: 0
+  field_failures: 0
+notes: PLACEHOLDER — replace with production-validated geometry.

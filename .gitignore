@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Test + cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated geometry / mesh / solver output
+runs/
+out/
+*.step
+*.stp
+*.stl
+*.iges
+*.igs
+*.msh
+*.frd
+*.dat
+*.cvg
+*.sta
+*.vtk
+*.vtp
+
+# Local secrets / env
+.env
+.env.*
+!.env.example
+
+# Trained ML checkpoints (commit only release artefacts via Releases)
+*.pt
+*.pth
+*.onnx
+*.h5

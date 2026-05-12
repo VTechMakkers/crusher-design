@@ -1,0 +1,111 @@
+# Part class registry. One entry per part class TechMakkers produces.
+# Each entry declares:
+#   criticality:     sacrificial | structural | safety_critical
+#   typical_material: default for new instances (override per-instance)
+#   wear_exposed:    boolean — if true, design loop weights wear higher
+#   applies_to_families: which crusher families use this part
+#
+# A geometry.py exists under templates/<part>/ for parts that are
+# parametrically designed in this system. Parts without geometry.py are
+# stubs awaiting first parametric definition.
+
+parts:
+  # ---- WEAR / SACRIFICIAL ----
+  fixed_jaw_plate:
+    criticality: sacrificial
+    typical_material: Mn13
+    wear_exposed: true
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: true   # templates/fixed_jaw_plate/geometry.py
+
+  swing_jaw_plate:
+    criticality: sacrificial
+    typical_material: Mn13
+    wear_exposed: true
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: true   # templates/swing_jaw_plate/geometry.py
+
+  cheek_plate_left:
+    criticality: sacrificial
+    typical_material: Mn13
+    wear_exposed: true
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: false
+
+  cheek_plate_right:
+    criticality: sacrificial
+    typical_material: Mn13
+    wear_exposed: true
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: false
+
+  toggle_plate:
+    criticality: sacrificial
+    typical_material: AR400
+    wear_exposed: false
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: true   # templates/toggle_plate/geometry.py
+
+  # ---- STRUCTURAL ----
+  pitman:
+    criticality: structural
+    typical_material: cast_steel    # add to materials.yaml when first instance created
+    wear_exposed: false
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: false
+
+  main_frame:
+    criticality: safety_critical
+    typical_material: S355J2
+    wear_exposed: false
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: false
+
+  eccentric_shaft:
+    criticality: safety_critical
+    typical_material: forged_steel   # add later
+    wear_exposed: false
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: false
+
+  flywheel:
+    criticality: structural
+    typical_material: cast_iron
+    wear_exposed: false
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: false
+
+  bearing_housing:
+    criticality: structural
+    typical_material: cast_steel
+    wear_exposed: false
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: false
+
+  toggle_seat:
+    criticality: sacrificial
+    typical_material: AR400
+    wear_exposed: true
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: false
+
+  tension_rod:
+    criticality: structural
+    typical_material: S355J2
+    wear_exposed: false
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: false
+
+  drive_sheave:
+    criticality: structural
+    typical_material: cast_iron
+    wear_exposed: false
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: false
+
+  hopper:
+    criticality: structural
+    typical_material: S355J2
+    wear_exposed: true
+    applies_to_families: [single_toggle_jaw, fine_jaw]
+    has_geometry: false

@@ -1,0 +1,21 @@
+part_class: toggle_plate
+version: 0.1.0
+status: scaffold     # scaffold | validated | production
+material_default: AR400
+applicable_crusher_sizes:
+  - PE 250x400
+  - PE 400x600
+  - PE 600x900
+function: |
+  Sacrificial compression member between pitman and rear toggle block.
+  Designed to fail (shear at relief groove) under tramp-iron overload,
+  protecting eccentric shaft, bearings, and main frame from damage.
+failure_modes:
+  - shear_at_relief_groove   # intended failure mode
+  - buckling_under_eccentric_load
+  - seat_wear_then_fatigue
+  - web_separation
+standards_applicable:
+  - IS 4255 (Indian standard, crushers terminology)
+  - ISO 21873 (mobile crushers - safety)
+  - relevant_section: TBD by engineer of record

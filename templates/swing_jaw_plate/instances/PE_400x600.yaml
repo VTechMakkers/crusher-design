@@ -1,0 +1,24 @@
+model: PE_400x600
+part: swing_jaw_plate
+material: Mn13
+params:
+  height_mm: 700
+  width_mm: 400
+  thickness_mm: 65
+  backing_thickness_mm: 35
+  tooth_pitch_mm: 90
+  tooth_depth_mm: 22
+  tooth_angle_deg: 95
+  mount_holes: 4
+  mount_hole_dia_mm: 24
+  mount_hole_inset_mm: 40
+  top_taper_deg: 6
+  bottom_taper_deg: 6
+validation:
+  fea_validated: false
+  dem_validated: false
+  lab_tested: false
+  field_validated: false
+  units_shipped: 0
+  field_failures: 0
+notes: PLACEHOLDER — replace with TechMakkers production-validated geometry.

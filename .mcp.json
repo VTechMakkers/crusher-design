@@ -1,0 +1,34 @@
+{
+  "mcpServers": {
+    "crusher-geometry": {
+      "command": "python",
+      "args": ["mcp-servers/geometry/server.py"],
+      "cwd": "${workspaceFolder}"
+    },
+    "crusher-fea": {
+      "command": "python",
+      "args": ["mcp-servers/fea/server.py"],
+      "cwd": "${workspaceFolder}"
+    },
+    "crusher-knowledge": {
+      "command": "python",
+      "args": ["mcp-servers/knowledge/server.py"],
+      "cwd": "${workspaceFolder}"
+    },
+    "crusher-dem": {
+      "command": "python",
+      "args": ["mcp-servers/dem/server.py"],
+      "cwd": "${workspaceFolder}"
+    },
+    "crusher-dfm": {
+      "command": "python",
+      "args": ["mcp-servers/dfm/server.py"],
+      "cwd": "${workspaceFolder}"
+    },
+    "crusher-assembly": {
+      "command": "python",
+      "args": ["mcp-servers/assembly/server.py"],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}

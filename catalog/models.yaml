@@ -1,0 +1,113 @@
+# Crusher model registry. One entry per product SKU TechMakkers manufactures.
+# Edit / extend this with your actual production line.
+#
+# Naming: PE = single-toggle jaw, PEX = fine-crushing jaw, gape format WxL (mm).
+
+models:
+  PE_150x250:
+    family: single_toggle_jaw
+    gape_mm: [150, 250]
+    feed_max_mm: 125
+    css_range_mm: [10, 40]
+    capacity_tph: [1, 3]
+    motor_kW: 5.5
+    weight_kg: 800
+
+  PE_250x400:
+    family: single_toggle_jaw
+    gape_mm: [250, 400]
+    feed_max_mm: 210
+    css_range_mm: [20, 60]
+    capacity_tph: [5, 21]
+    motor_kW: 15
+    weight_kg: 2800
+
+  PE_400x600:
+    family: single_toggle_jaw
+    gape_mm: [400, 600]
+    feed_max_mm: 340
+    css_range_mm: [40, 100]
+    capacity_tph: [16, 65]
+    motor_kW: 30
+    weight_kg: 7000
+
+  PE_500x750:
+    family: single_toggle_jaw
+    gape_mm: [500, 750]
+    feed_max_mm: 425
+    css_range_mm: [50, 100]
+    capacity_tph: [40, 110]
+    motor_kW: 55
+    weight_kg: 10500
+
+  PE_600x900:
+    family: single_toggle_jaw
+    gape_mm: [600, 900]
+    feed_max_mm: 500
+    css_range_mm: [65, 160]
+    capacity_tph: [50, 180]
+    motor_kW: 75
+    weight_kg: 17000
+
+  PE_750x1060:
+    family: single_toggle_jaw
+    gape_mm: [750, 1060]
+    feed_max_mm: 630
+    css_range_mm: [80, 180]
+    capacity_tph: [110, 320]
+    motor_kW: 110
+    weight_kg: 29000
+
+  PE_900x1200:
+    family: single_toggle_jaw
+    gape_mm: [900, 1200]
+    feed_max_mm: 750
+    css_range_mm: [95, 165]
+    capacity_tph: [220, 450]
+    motor_kW: 132
+    weight_kg: 52000
+
+  PE_1200x1500:
+    family: single_toggle_jaw
+    gape_mm: [1200, 1500]
+    feed_max_mm: 1020
+    css_range_mm: [150, 300]
+    capacity_tph: [400, 800]
+    motor_kW: 200
+    weight_kg: 100000
+
+  PEX_150x750:
+    family: fine_jaw
+    gape_mm: [150, 750]
+    feed_max_mm: 120
+    css_range_mm: [18, 48]
+    capacity_tph: [8, 25]
+    motor_kW: 15
+    weight_kg: 3800
+
+  PEX_250x1000:
+    family: fine_jaw
+    gape_mm: [250, 1000]
+    feed_max_mm: 210
+    css_range_mm: [25, 60]
+    capacity_tph: [16, 52]
+    motor_kW: 30
+    weight_kg: 7000
+
+  PEX_250x1200:
+    family: fine_jaw
+    gape_mm: [250, 1200]
+    feed_max_mm: 210
+    css_range_mm: [25, 60]
+    capacity_tph: [20, 65]
+    motor_kW: 37
+    weight_kg: 8800
+
+  PEX_300x1300:
+    family: fine_jaw
+    gape_mm: [300, 1300]
+    feed_max_mm: 250
+    css_range_mm: [25, 105]
+    capacity_tph: [16, 105]
+    motor_kW: 55
+    weight_kg: 11000

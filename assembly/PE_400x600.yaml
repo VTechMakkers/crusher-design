@@ -1,0 +1,140 @@
+# Whole-machine assembly definition for PE_400x600 single-toggle jaw crusher.
+# Each entry in `parts` is a node in the assembly graph; each entry in
+# `connections` is an edge labelled structural | kinematic | constraint.
+#
+# Instance names refer to validated configurations under
+# templates/<part_class>/instances/<instance>.yaml.
+
+model: PE_400x600
+family: single_toggle_jaw
+
+parts:
+  swing_jaw:
+    part_class: swing_jaw_plate
+    instance: PE_400x600
+    role: moving crushing surface
+
+  fixed_jaw:
+    part_class: fixed_jaw_plate
+    instance: PE_400x600
+    role: stationary crushing surface
+
+  toggle:
+    part_class: toggle_plate
+    instance: PE_400x600
+    role: sacrificial overload protector
+
+  # Below: declared in assembly graph for force-path completeness,
+  # but no parametric geometry yet (templates not authored).
+  # The assembly graph allows reasoning about them; KPI evaluation
+  # uses placeholder masses/costs until instances exist.
+  pitman:
+    part_class: pitman
+    instance: PE_400x600_pending
+    role: oscillating link between eccentric and swing jaw
+
+  eccentric_shaft:
+    part_class: eccentric_shaft
+    instance: PE_400x600_pending
+    role: motion source; converts rotation to throw
+
+  main_frame:
+    part_class: main_frame
+    instance: PE_400x600_pending
+    role: structural backbone; absorbs all reaction loads
+
+  cheek_plate_left:
+    part_class: cheek_plate_left
+    instance: PE_400x600_pending
+    role: side liner; contains feed
+
+  cheek_plate_right:
+    part_class: cheek_plate_right
+    instance: PE_400x600_pending
+    role: side liner; contains feed
+
+  flywheel_drive:
+    part_class: flywheel
+    instance: PE_400x600_drive_pending
+    role: kinetic-energy reservoir; smooths stroke; driven side
+
+  flywheel_idle:
+    part_class: flywheel
+    instance: PE_400x600_idle_pending
+    role: kinetic-energy reservoir; smooths stroke; idle side
+
+  bearing_eccentric_drive:
+    part_class: bearing_housing
+    instance: PE_400x600_drive_pending
+    role: supports eccentric shaft; drive side
+
+  bearing_eccentric_idle:
+    part_class: bearing_housing
+    instance: PE_400x600_idle_pending
+    role: supports eccentric shaft; idle side
+
+connections:
+  # ---- structural (load path: rock → frame) ----
+  - {a: swing_jaw, b: pitman, kind: structural, detail: "swing jaw bolted to pitman face"}
+  - {a: fixed_jaw, b: main_frame, kind: structural, detail: "fixed jaw bolted to frame"}
+  - {a: cheek_plate_left, b: main_frame, kind: structural}
+  - {a: cheek_plate_right, b: main_frame, kind: structural}
+  - {a: pitman, b: eccentric_shaft, kind: structural, detail: "pitman big-end bearing"}
+  - {a: pitman, b: toggle, kind: structural, detail: "pitman bottom toggle seat"}
+  - {a: toggle, b: main_frame, kind: structural, detail: "toggle rear seat in frame"}
+  - {a: eccentric_shaft, b: bearing_eccentric_drive, kind: structural}
+  - {a: eccentric_shaft, b: bearing_eccentric_idle, kind: structural}
+  - {a: bearing_eccentric_drive, b: main_frame, kind: structural}
+  - {a: bearing_eccentric_idle, b: main_frame, kind: structural}
+
+  # ---- kinematic (motion path) ----
+  - {a: eccentric_shaft, b: pitman, kind: kinematic, detail: "eccentric → pitman swing"}
+  - {a: pitman, b: swing_jaw, kind: kinematic}
+  - {a: eccentric_shaft, b: flywheel_drive, kind: kinematic}
+  - {a: eccentric_shaft, b: flywheel_idle, kind: kinematic}
+
+constraints:
+  # ---- cross-part geometric / material consistency ----
+  - {kind: params_equal, a: swing_jaw, b: fixed_jaw,
+     param: tooth_pitch_mm,
+     reason: paired jaws must have matching pitch for peak-meets-valley operation}
+  - {kind: params_equal, a: swing_jaw, b: fixed_jaw,
+     param: width_mm,
+     reason: jaws span the same chamber width}
+  - {kind: params_equal, a: bearing_eccentric_drive, b: bearing_eccentric_idle,
+     param: bore_mm,
+     reason: both bearings sit on same eccentric shaft journal}
+
+# Mechanism geometry — drives the MBD layer.
+# Source: representative single-toggle 4-bar for the PE_400x600 class;
+# replace with TechMakkers' validated production dimensions.
+mechanism:
+  eccentric_throw_mm: 14.0
+  pitman_length_mm: 600.0
+  toggle_length_mm: 300.0
+  base_dx_mm: -350.0          # Q position relative to eccentric center O
+  base_dy_mm: -282.0
+  rpm: 280.0
+  motor_kW: 30.0
+  flywheel_inertia_kg_m2: 35.0  # combined drive + idle side
+
+system_targets:
+  # Catalog-level performance promises for this model.
+  capacity_tph_range: [16, 65]
+  feed_p80_max_mm: 340
+  css_range_mm: [40, 100]
+  motor_kW_max: 30
+  weight_kg_max: 7500       # incentive to minimize
+  cost_baseline_INR: 1500000  # rough; ASP target ~ ₹15L
+  expected_service_life_hours: 25000
+  expected_wear_part_replacements_per_lifetime: 5
+
+# Pareto objectives — what we co-optimize across the full assembly.
+# (sign: minimize | maximize; weight: indicative only — Pareto is non-scalar)
+pareto_objectives:
+  - {key: tph_at_design_css, sign: maximize, weight: 0.25}
+  - {key: total_weight_kg, sign: minimize, weight: 0.15}
+  - {key: energy_kWh_per_t, sign: minimize, weight: 0.15}
+  - {key: wear_part_life_hours, sign: maximize, weight: 0.20}
+  - {key: unit_cost_INR, sign: minimize, weight: 0.15}
+  - {key: bearing_L10_life_hours, sign: maximize, weight: 0.10}

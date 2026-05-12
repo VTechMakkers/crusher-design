@@ -1,0 +1,22 @@
+cases:
+  - name: nominal_crushing
+    crushing_force_kN: 850
+    direction: normal_to_face
+    impact_frequency_hz: 4.5
+    duty_factor: 0.85
+
+  - name: peak_impact
+    crushing_force_kN: 2400
+    direction: normal_to_face_localized
+    impact_frequency_hz: null
+    duty_factor: null
+
+  - name: tramp_iron
+    crushing_force_kN: 3500
+    direction: normal_to_face_point_load
+    expected_outcome: load_relieved_through_toggle_plate_shear
+
+constraints:
+  fixed: backing_plate_mounting_holes
+  contact: faces_against_swing_jaw_via_feed
+  symmetry: none

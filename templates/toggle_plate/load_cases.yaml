@@ -1,0 +1,33 @@
+# Load cases for FEA validation of the toggle plate.
+# Forces applied at the toggle seats; reaction at the opposing seat.
+# Magnitudes are placeholders — replace with measured/derived values from
+# your specific crusher size (e.g. PE 600x900, PE 250x400, etc.).
+
+cases:
+  - name: nominal_operating
+    description: peak compression at design throughput, basalt feed
+    seat_force_kN: 320
+    direction: compression
+    cycles_per_hour: 4500
+    duty_factor: 0.85
+
+  - name: peak_overload
+    description: tramp-iron passage; toggle expected to shear here
+    seat_force_kN: 1100
+    direction: compression
+    cycles_per_hour: null
+    duty_factor: null
+    expected_outcome: controlled_shear_at_relief_groove
+
+  - name: misaligned_seat
+    description: worn seat geometry, eccentric loading
+    seat_force_kN: 360
+    direction: compression_eccentric
+    eccentricity_mm: 8
+    cycles_per_hour: 4500
+    duty_factor: 0.85
+
+constraints:
+  fixed: opposing_seat
+  symmetry: none
+  contact: bonded_at_web

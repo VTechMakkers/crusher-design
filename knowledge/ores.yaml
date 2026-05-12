@@ -1,0 +1,139 @@
+# Ore / rock properties for DEM simulation + capacity / power calcs.
+# Sources mixed: Bond 1961 + 911Metallurgist Wi tables + handbook ranges.
+# Replace specific values with measurements when you have them.
+
+ores:
+  basalt:
+    bond_work_index_kWh_per_t: 17.1
+    density_kg_m3: 2900
+    youngs_modulus_GPa: 60
+    poisson_ratio: 0.25
+    friction_coefficient: 0.62
+    restitution_coefficient: 0.40
+    hardness_mohs: 6.5
+    abrasion_index_ai: 0.78
+    typical_feed_in_india: high
+    notes: hard volcanic rock; abrasive; common India construction aggregate
+
+  granite:
+    bond_work_index_kWh_per_t: 15.1
+    density_kg_m3: 2700
+    youngs_modulus_GPa: 50
+    poisson_ratio: 0.25
+    friction_coefficient: 0.60
+    restitution_coefficient: 0.38
+    hardness_mohs: 6.0
+    abrasion_index_ai: 0.65
+    typical_feed_in_india: high
+    notes: medium-hard plutonic; abrasive; common aggregate + dimension stone
+
+  limestone:
+    bond_work_index_kWh_per_t: 11.6
+    density_kg_m3: 2500
+    youngs_modulus_GPa: 35
+    poisson_ratio: 0.25
+    friction_coefficient: 0.55
+    restitution_coefficient: 0.35
+    hardness_mohs: 3.5
+    abrasion_index_ai: 0.18
+    typical_feed_in_india: high
+    notes: softer; lower wear rate; cement, aggregate, road base
+
+  dolomite:
+    bond_work_index_kWh_per_t: 11.3
+    density_kg_m3: 2850
+    youngs_modulus_GPa: 40
+    poisson_ratio: 0.26
+    friction_coefficient: 0.56
+    restitution_coefficient: 0.36
+    hardness_mohs: 4.0
+    abrasion_index_ai: 0.25
+    typical_feed_in_india: medium
+
+  iron_ore_hematite:
+    bond_work_index_kWh_per_t: 12.7
+    density_kg_m3: 5200
+    youngs_modulus_GPa: 75
+    poisson_ratio: 0.27
+    friction_coefficient: 0.65
+    restitution_coefficient: 0.32
+    hardness_mohs: 6.0
+    abrasion_index_ai: 0.85
+    typical_feed_in_india: high
+    notes: very abrasive; high density; mining application
+
+  iron_ore_magnetite:
+    bond_work_index_kWh_per_t: 10.2
+    density_kg_m3: 5150
+    youngs_modulus_GPa: 80
+    poisson_ratio: 0.27
+    friction_coefficient: 0.66
+    restitution_coefficient: 0.33
+    hardness_mohs: 6.0
+    abrasion_index_ai: 0.82
+
+  bauxite:
+    bond_work_index_kWh_per_t: 9.5
+    density_kg_m3: 2550
+    youngs_modulus_GPa: 30
+    poisson_ratio: 0.25
+    friction_coefficient: 0.55
+    restitution_coefficient: 0.34
+    hardness_mohs: 3.5
+    abrasion_index_ai: 0.35
+
+  sandstone:
+    bond_work_index_kWh_per_t: 11.5
+    density_kg_m3: 2400
+    youngs_modulus_GPa: 25
+    poisson_ratio: 0.25
+    friction_coefficient: 0.58
+    restitution_coefficient: 0.35
+    hardness_mohs: 4.0
+    abrasion_index_ai: 0.55
+
+  quartzite:
+    bond_work_index_kWh_per_t: 16.5
+    density_kg_m3: 2650
+    youngs_modulus_GPa: 55
+    poisson_ratio: 0.20
+    friction_coefficient: 0.62
+    restitution_coefficient: 0.38
+    hardness_mohs: 7.0
+    abrasion_index_ai: 0.85
+    notes: very hard + abrasive; wears jaw plates fast
+
+  coal:
+    bond_work_index_kWh_per_t: 11.4
+    density_kg_m3: 1400
+    youngs_modulus_GPa: 5
+    poisson_ratio: 0.32
+    friction_coefficient: 0.45
+    restitution_coefficient: 0.30
+    hardness_mohs: 2.5
+    abrasion_index_ai: 0.05
+    notes: soft; low wear; thermal power station feed
+
+  copper_ore:
+    bond_work_index_kWh_per_t: 13.1
+    density_kg_m3: 3200
+    youngs_modulus_GPa: 60
+    poisson_ratio: 0.26
+    friction_coefficient: 0.60
+    restitution_coefficient: 0.36
+    hardness_mohs: 5.5
+    abrasion_index_ai: 0.50
+
+  gabbro:
+    bond_work_index_kWh_per_t: 18.5
+    density_kg_m3: 3000
+    youngs_modulus_GPa: 70
+    poisson_ratio: 0.26
+    friction_coefficient: 0.63
+    restitution_coefficient: 0.40
+    hardness_mohs: 6.0
+    abrasion_index_ai: 0.80
+    notes: very tough; high power demand; mining
+
+# Defaults applied when an ore is unknown — conservative (hard, abrasive)
+default_ore: basalt

@@ -1,0 +1,24 @@
+part_class: swing_jaw_plate
+version: 0.1.0
+status: scaffold
+material_default: Mn13
+applies_to_families: [single_toggle_jaw, fine_jaw]
+function: |
+  The moving crushing surface. Impacts and abrades feed material against
+  the fixed jaw plate. Highest wear part class in the crusher — replaced
+  multiple times per crusher lifetime. Corrugation pattern dictates
+  breakage efficiency, wear distribution, and product gradation.
+failure_modes:
+  - even_face_wear            # normal end-of-life
+  - localized_wear            # poor feed distribution or corrugation mismatch
+  - tooth_break_off           # impact overload on individual teeth
+  - bolt_loosening            # mounting hole wear
+  - cracking_at_tooth_root    # fatigue under cyclic impact
+high_leverage_design_variables:
+  - tooth_pitch_mm            # affects breakage rate, wear pattern
+  - tooth_depth_mm            # affects bite + wear life
+  - tooth_angle_deg           # affects nip + breakage mode
+  - corrugation_alignment     # vs fixed jaw (matching vs offset)
+dem_optimization_target: |
+  Maximize: breakage rate per stroke × wear-life
+  Subject to: P80 within customer spec, no chamber choke at design throughput

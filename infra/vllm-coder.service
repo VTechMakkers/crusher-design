@@ -1,0 +1,24 @@
+[Unit]
+Description=vLLM serving Qwen3-Coder-30B (AWQ-4bit) on RTX 3090
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/opt/crusher-design
+Environment="CUDA_VISIBLE_DEVICES=0"
+Environment="HF_HOME=/var/cache/huggingface"
+ExecStart=/usr/bin/env vllm serve Qwen/Qwen3-Coder-30B-A3B-Instruct-AWQ \
+    --host 127.0.0.1 \
+    --port 8001 \
+    --quantization awq \
+    --max-model-len 32768 \
+    --gpu-memory-utilization 0.92 \
+    --enforce-eager \
+    --served-model-name qwen3-coder-30b
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

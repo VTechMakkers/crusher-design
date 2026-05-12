@@ -1,0 +1,57 @@
+# Source: MakeItFrom.com (tier 4 — curated handbook).
+# These are the values currently used as defaults in knowledge/materials.yaml.
+# Override with techmakkers_internal data when measurements become available.
+
+source_id: makeitfrom
+attribution: Values curated from MakeItFrom.com (free engineering material database)
+fetched: 2026-05-11
+
+materials:
+  AR400:
+    yield_strength_MPa: 1000
+    ultimate_strength_MPa: 1250
+    hardness_HBW: 400
+    elongation_pct: 10
+    density_kg_m3: 7850
+    youngs_modulus_GPa: 200
+    poisson_ratio: 0.29
+
+  AR500:
+    yield_strength_MPa: 1250
+    ultimate_strength_MPa: 1550
+    hardness_HBW: 500
+    elongation_pct: 8
+    density_kg_m3: 7850
+    youngs_modulus_GPa: 200
+    poisson_ratio: 0.29
+
+  Mn13:
+    yield_strength_MPa: 380
+    ultimate_strength_MPa: 850
+    hardness_HBW_as_cast: 200
+    hardness_HBW_work_hardened: 550
+    elongation_pct: 40
+    density_kg_m3: 7870
+    youngs_modulus_GPa: 200
+    poisson_ratio: 0.30
+    archard_k_relative: 0.35
+
+  Mn18:
+    yield_strength_MPa: 420
+    ultimate_strength_MPa: 920
+    hardness_HBW_as_cast: 220
+    hardness_HBW_work_hardened: 600
+    elongation_pct: 35
+    density_kg_m3: 7870
+    youngs_modulus_GPa: 200
+    poisson_ratio: 0.30
+    archard_k_relative: 0.28
+
+  S355J2:
+    yield_strength_MPa: 355
+    ultimate_strength_MPa: 510
+    hardness_HBW: 160
+    elongation_pct: 22
+    density_kg_m3: 7850
+    youngs_modulus_GPa: 210
+    poisson_ratio: 0.30

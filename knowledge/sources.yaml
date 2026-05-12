@@ -1,0 +1,122 @@
+# Source registry. Every external or internal data source is declared here
+# with a tier. The resolver in mcp-servers/knowledge ranks sources by tier
+# when multiple sources offer values for the same property.
+#
+# Tiers (lower = higher trust):
+#   1  techmakkers_internal_measured  — your mill certs, fab measurements, field telemetry
+#   2  techmakkers_internal_validated — your FEA + engineer sign-off
+#   3  external_authoritative         — NIST, Materials Project, ISO/BIS standards, peer-reviewed
+#   4  external_handbook              — MakeItFrom, manufacturer datasheets, ScienceDirect
+#   5  external_industry              — 911Metallurgist tables, trade journals
+#   6  external_unverified            — community wikis, blogs, GrabCAD geometry
+
+sources:
+  techmakkers_mill_cert:
+    tier: 1
+    description: Mill certificates from steel suppliers for actual purchased heats
+    storage: knowledge/sources/techmakkers_internal.yaml
+    notes: |
+      Bind heat number, batch, supplier, date. Use the actual measured values
+      from the cert (yield, UTS, hardness, composition) — these are ground
+      truth for the steel YOU actually crush rocks with.
+
+  techmakkers_fab_measurement:
+    tier: 1
+    description: Dimensions, masses, hardness measured at TechMakkers fab
+    storage: knowledge/sources/techmakkers_internal.yaml
+
+  techmakkers_field_telemetry:
+    tier: 1
+    description: Sensor data from deployed crushers (vibration, temp, current, wear logs)
+    storage: (future) data/telemetry/<unit_id>.parquet
+    notes: Wear rates derived from field telemetry override ALL handbook wear data.
+
+  techmakkers_fea_validated:
+    tier: 2
+    description: FEA results signed off by engineer of record
+    storage: templates/<part>/instances/<model>.history.jsonl
+
+  techmakkers_design_decision:
+    tier: 2
+    description: Founder/senior engineer captured design rationale
+    storage: memory/decisions/*.md
+
+  nist_srd:
+    tier: 3
+    description: NIST Standard Reference Data
+    url: https://srdata.nist.gov/
+    license: US government public domain
+    storage: knowledge/sources/nist_srd.yaml
+
+  materials_project:
+    tier: 3
+    description: Materials Project DFT-computed properties
+    url: https://next-gen.materialsproject.org/
+    api: REST API + Python client
+    license: CC-BY
+    storage: knowledge/sources/materials_project.yaml
+
+  bis_standards:
+    tier: 3
+    description: Bureau of Indian Standards — published standards metadata only (text is paid)
+    url: https://www.services.bis.gov.in/php/BIS_2.0/bisconnect/
+    storage: knowledge/sources/standards.yaml
+    notes: Cite clause numbers; do NOT inline-copy text (license).
+
+  iso_standards:
+    tier: 3
+    description: ISO published standards metadata
+    url: https://www.iso.org/
+    storage: knowledge/sources/standards.yaml
+
+  makeitfrom:
+    tier: 4
+    description: MakeItFrom curated engineering material properties
+    url: https://www.makeitfrom.com/
+    license: free, attribution required
+    storage: knowledge/sources/makeitfrom.yaml
+
+  scientific_paper:
+    tier: 4
+    description: peer-reviewed paper (arXiv, Semantic Scholar, ScienceDirect)
+    storage: knowledge/sources/papers.yaml
+    notes: Each entry must include DOI or arXiv ID.
+
+  bond_1961:
+    tier: 4
+    description: F.C. Bond 1961, Crushing and Grinding Calculations
+    url: https://www.911metallurgist.com/wp-content/uploads/2015/11/Bond-F-C-1961-Crushing-and-Grinding-Calculations.pdf
+    storage: knowledge/sources/comminution.yaml
+
+  metallurgist_911_wi_table:
+    tier: 5
+    description: Bond Work Index table (industry standard but old)
+    url: https://www.911metallurgist.com/blog/bond-impact-crushing-work-index-procedure-and-table-of-crushability/
+    storage: knowledge/sources/comminution.yaml
+    notes: Useful starting point; replace with measurement when you have it.
+
+  vendor_datasheet:
+    tier: 5
+    description: bearing, motor, hydraulic vendor datasheets
+    storage: knowledge/sources/vendors.yaml
+
+  community_geometry:
+    tier: 6
+    description: GrabCAD / 3D ContentCentral / community-uploaded CAD
+    notes: Reference only — never canonical. Use for competitive benchmarking.
+
+# Task-specific source priority overrides. When a calculation is performed,
+# the resolver checks this map and elevates certain sources.
+task_overrides:
+  wear_life:
+    elevate: [techmakkers_field_telemetry, techmakkers_fab_measurement]
+    reason: Field-measured wear under YOUR conditions beats handbook for YOUR materials.
+  fatigue:
+    elevate: [techmakkers_fea_validated, scientific_paper]
+    reason: Fatigue is geometry+load specific; FEA + peer-reviewed beat generic handbook S-N curves.
+  novel_alloy:
+    elevate: [materials_project, nist_srd, scientific_paper]
+    reason: No internal data exists yet for alloys not in production.
+  bond_work_index:
+    elevate: [scientific_paper, bond_1961, metallurgist_911_wi_table]
+    reason: Use modern measurement where available; fall back to canonical table.

@@ -1,0 +1,42 @@
+# Applicable standards. PLACEHOLDER STRUCTURE — engineer of record to verify
+# specific clause numbers and applicability before relying in production.
+
+IS_4255:
+  title: Crushers, mineral - classification and terminology
+  jurisdiction: India (BIS)
+  scope: terminology + classification; does not directly specify design loads
+  notes: |
+    Used for size designation (e.g. PE 600x900 = jaw gape 600x900 mm).
+    Not a structural design standard.
+
+IS_9006:
+  title: Code of practice for design of conveyor belts (related, ancillary)
+  jurisdiction: India (BIS)
+  scope: TBD by engineer of record
+
+ISO_21873_1:
+  title: Building construction machinery and equipment - Mobile crushers - Part 1
+  jurisdiction: International (ISO)
+  scope: terminology and commercial specifications
+
+ISO_21873_2:
+  title: Mobile crushers - Part 2 - Safety requirements
+  jurisdiction: International (ISO)
+  scope: safety design requirements for mobile units
+  relevant_for:
+    - guards
+    - emergency_stop
+    - access_doors_interlocks
+    - hydraulic_safety
+
+# Safety factor conventions used in this codebase (not from any single standard;
+# represent typical industry practice — adjust to your house rules):
+safety_factors:
+  static_load:
+    sacrificial_parts: 1.5
+    structural_parts: 2.5
+    safety_critical_parts: 4.0
+  fatigue_load:
+    sacrificial_parts: 2.0
+    structural_parts: 4.0
+    safety_critical_parts: 8.0

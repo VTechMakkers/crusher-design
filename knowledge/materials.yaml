@@ -1,0 +1,78 @@
+# Material properties for crusher parts.
+# Values are typical/handbook — replace with mill-cert data for production.
+# Wear models: simplified Archard form coefficient k for relative ranking only.
+
+AR400:
+  family: abrasion_resistant_plate
+  density_kg_m3: 7850
+  youngs_modulus_GPa: 200
+  poisson_ratio: 0.29
+  yield_strength_MPa: 1000
+  ultimate_strength_MPa: 1250
+  hardness_HBW: 400
+  elongation_pct: 10
+  archard_k_relative: 1.0          # baseline for wear comparisons
+  cost_INR_per_kg: 120             # 2025-26 India ballpark; replace with vendor quote
+  notes: standard sacrificial/structural plate; weldable with care
+
+AR500:
+  family: abrasion_resistant_plate
+  density_kg_m3: 7850
+  youngs_modulus_GPa: 200
+  poisson_ratio: 0.29
+  yield_strength_MPa: 1250
+  ultimate_strength_MPa: 1550
+  hardness_HBW: 500
+  elongation_pct: 8
+  archard_k_relative: 0.65
+  cost_INR_per_kg: 145
+  notes: higher wear life; reduced weldability and toughness
+
+Mn13:
+  family: austenitic_manganese_steel
+  composition: "C 1.0-1.4, Mn 11-14"
+  density_kg_m3: 7870
+  youngs_modulus_GPa: 200
+  poisson_ratio: 0.30
+  yield_strength_MPa: 380         # as-cast, work-hardens dramatically in service
+  ultimate_strength_MPa: 850
+  hardness_HBW_as_cast: 200
+  hardness_HBW_work_hardened: 550
+  elongation_pct: 40
+  archard_k_relative: 0.35
+  cost_INR_per_kg: 270
+  notes: |
+    Hadfield steel. Work-hardens under impact, so wear surface gets harder
+    in service. Strong choice for jaw plates / cone mantles facing impact
+    + abrasion. Poor for low-impact pure abrasion (won't work-harden).
+
+Mn18:
+  family: austenitic_manganese_steel
+  composition: "C 1.1-1.3, Mn 17-19"
+  density_kg_m3: 7870
+  youngs_modulus_GPa: 200
+  poisson_ratio: 0.30
+  yield_strength_MPa: 420
+  ultimate_strength_MPa: 920
+  hardness_HBW_as_cast: 220
+  hardness_HBW_work_hardened: 600
+  elongation_pct: 35
+  archard_k_relative: 0.28
+  cost_INR_per_kg: 320
+  notes: Higher-Mn variant; better high-impact performance, costs more
+
+S355J2:
+  family: structural_steel
+  density_kg_m3: 7850
+  youngs_modulus_GPa: 210
+  poisson_ratio: 0.30
+  yield_strength_MPa: 355
+  ultimate_strength_MPa: 510
+  hardness_HBW: 160
+  elongation_pct: 22
+  archard_k_relative: 3.5
+  cost_INR_per_kg: 82
+  notes: Main frame, pitman bodies; not for wear-exposed surfaces
+
+# Wear-life proxy — relative metric only, NOT a physical lifetime.
+# To rank designs by expected wear: lower archard_k_relative * contact_stress = better.
