@@ -30,6 +30,15 @@ dev = [
 [tool.uv]
 dev-dependencies = ["pytest>=8.0", "ruff>=0.5"]
 
+# Setuptools auto-discovery would find loop/, assembly/, templates/,
+# knowledge/, catalog/, memory/, infra/, etc. as candidate packages
+# and refuse to proceed. Only `loop` and `assembly` are real importable
+# Python packages; the rest are data/config directories or hyphenated
+# script roots (mcp-servers, bin) that callers reach via sys.path
+# manipulation. Declare the real packages explicitly.
+[tool.setuptools]
+packages = ["loop", "assembly"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
